@@ -121,4 +121,73 @@ function buildPrompt() {
 `Create a ${duration} video in ${ratio} aspect ratio.
 Visual style: ${style}.
 Video concept: ${idea}
-Use clear subject details, natural motion, consi…
+Use clear subject details, natural motion, consistent objects and lighting, smooth camera movement, and a visually coherent scene.
+Avoid unwanted text, logos, watermarks, flicker, distorted anatomy, and abrupt transitions.
+Output only the video, with no narration or music unless requested.`;
+  document.getElementById('status').textContent = 'Prompt created successfully!';
+}
+
+async function copyPrompt() {
+  const output = document.getElementById('output');
+  if (!output.value.trim()) {
+    document.getElementById('status').textContent = 'Build a prompt first.';
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(output.value);
+    document.getElementById('status').textContent = 'Prompt copied!';
+  } catch (e) {
+    output.select();
+    document.execCommand('copy');
+    document.getElementById('status').textContent = 'Select and copy if needed.';
+  }
+}
+
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem('myAISavedPrompts') || '[]'); }
+  catch (e) { return []; }
+}
+
+function refreshSaved() {
+  const select = document.getElementById('saved');
+  select.innerHTML = '<option value="">Choose a saved prompt</option>';
+  getSaved().forEach((prompt, index) => {
+    const option = document.createElement('option');
+    option.value = index;
+    option.textContent = prompt.slice(0, 65).replace(/\n/g, ' ') || 'Saved prompt';
+    select.appendChild(option);
+  });
+}
+
+function savePrompt() {
+  const output = document.getElementById('output').value.trim();
+  if (!output) {
+    document.getElementById('status').textContent = 'Build a prompt first.';
+    return;
+  }
+  const prompts = getSaved();
+  prompts.push(output);
+  localStorage.setItem('myAISavedPrompts', JSON.stringify(prompts));
+  refreshSaved();
+  document.getElementById('status').textContent = 'Prompt saved on this device.';
+}
+
+function loadPrompt() {
+  const index = document.getElementById('saved').value;
+  if (index === '') return;
+  document.getElementById('output').value = getSaved()[Number(index)] || '';
+  document.getElementById('status').textContent = 'Saved prompt loaded.';
+}
+
+function clearSaved() {
+  if (confirm('Delete all saved prompts on this device?')) {
+    localStorage.removeItem('myAISavedPrompts');
+    refreshSaved();
+    document.getElementById('status').textContent = 'Saved prompts cleared.';
+  }
+}
+
+refreshSaved();
+</script>
+</body>
+</html>
