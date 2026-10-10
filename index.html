@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My AI Video Studio</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #101323;
+      color: #f5f6ff;
+      padding: 24px 14px;
+    }
+    main {
+      max-width: 700px;
+      margin: auto;
+      background: #1a2036;
+      border: 1px solid #343c59;
+      border-radius: 18px;
+      padding: 24px;
+    }
+    h1 { color: #a8baff; margin-top: 0; }
+    p { color: #c4cbe0; line-height: 1.6; }
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: bold;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 9px;
+      border: 1px solid #4c5679;
+      background: #11172a;
+      color: white;
+      font-size: 16px;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 9px;
+      background: #718cff;
+      color: #101323;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button.secondary { background: #303a58; color: white; }
+    #status { color: #a8f0c6; }
+    footer { text-align: center; margin-top: 20px; color: #a4acc5; font-size: 13px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>🎬 My AI Video Studio</h1>
+  <p>Create video prompts for AI video generators. This first version creates prompts; it does not generate video files itself.</p>
+
+  <label for="idea">Describe your video</label>
+  <textarea id="idea" placeholder="Example: A tiny kitten walking through a rainy garden..."></textarea>
+
+  <label for="duration">Video duration</label>
+  <select id="duration">
+    <option>5 seconds</option>
+    <option>10 seconds</option>
+    <option>15 seconds</option>
+    <option>20 seconds</option>
+    <option>30 seconds</option>
+  </select>
+
+  <label for="ratio">Aspect ratio</label>
+  <select id="ratio">
+    <option value="9:16 vertical">9:16 - Reels / Shorts</option>
+    <option value="16:9 horizontal">16:9 - YouTube</option>
+    <option value="1:1 square">1:1 - Square</option>
+  </select>
+
+  <label for="style">Visual style</label>
+  <select id="style">
+    <option>Photorealistic cinematic</option>
+    <option>Hand-painted 2D animation</option>
+    <option>Nature documentary</option>
+    <option>Cozy and dreamy</option>
+    <option>Realistic food video</option>
+  </select>
+
+  <button onclick="buildPrompt()">Build Prompt</button>
+
+  <label for="output">Ready-to-use prompt</label>
+  <textarea id="output" placeholder="Your completed prompt will appear here..."></textarea>
+
+  <button onclick="copyPrompt()">Copy Prompt</button>
+  <button class="secondary" onclick="savePrompt()">Save Prompt on This Device</button>
+  <p id="status" aria-live="polite"></p>
+
+  <label for="saved">Saved prompts</label>
+  <select id="saved">
+    <option value="">Choose a saved prompt</option>
+  </select>
+  <button class="secondary" onclick="loadPrompt()">Load Saved Prompt</button>
+  <button class="secondary" onclick="clearSaved()">Clear Saved Prompts</button>
+
+  <footer>My AI Video Studio · Version 1</footer>
+</main>
+
+<script>
+function buildPrompt() {
+  const idea = document.getElementById('idea').value.trim();
+  if (!idea) {
+    document.getElementById('status').textContent = 'Please describe your video first.';
+    return;
+  }
+  const duration = document.getElementById('duration').value;
+  const ratio = document.getElementById('ratio').value;
+  const style = document.getElementById('style').value;
+  document.getElementById('output').value =
+`Create a ${duration} video in ${ratio} aspect ratio.
+Visual style: ${style}.
+Video concept: ${idea}
+Use clear subject details, natural motion, consi…
